@@ -726,13 +726,18 @@ public:
 
     	ros::Rate rate(0.2);
     	while (ros::ok()){
-	    	rate.sleep();
+	    rate.sleep();
             publishGlobalMap(); // 계속해서 맵을 퍼블리시
-		}
 
-    // 루프가 끝난 후 최종 맵 저장
-    	ROS_INFO("Saving final maps.............");
 
+    // 최종 포인트 클라우드 저장
+    	if (!globalMapKeyFramesDS->empty()) {
+        	pcl::io::savePCDFileASCII(fileDirectory + "finalCloud.pcd", *globalMapKeyFramesDS);
+        	ROS_INFO("Successfully saved finalCloud.pcd");
+    	} else {
+        	ROS_WARN("globalMapKeyFramesDS is empty, final map will not be saved.");
+   	}
+		
     	string cornerMapString = "/tmp/cornerMap.pcd";
     	string surfaceMapString = "/tmp/surfaceMap.pcd";
     	string trajectoryString = "/tmp/trajectory.pcd";
@@ -755,15 +760,25 @@ public:
     	downSizeFilterSurf.setInputCloud(surfaceMapCloud);
     	downSizeFilterSurf.filter(*surfaceMapCloudDS);
 
-    	pcl::io::savePCDFileASCII(fileDirectory+"cornerMap.pcd", *cornerMapCloudDS);
-    	pcl::io::savePCDFileASCII(fileDirectory+"surfaceMap.pcd", *surfaceMapCloudDS);
-    	pcl::io::savePCDFileASCII(fileDirectory+"trajectory.pcd", *cloudKeyPoses3D);
 
-    	// 최종 글로벌 맵 저장
-    	pcl::io::savePCDFileASCII(fileDirectory+"finalCloud.pcd", *globalMapKeyFramesDS);
+    	if (!cornerMapCloudDS->empty()) {
+        	pcl::io::savePCDFileASCII(fileDirectory + "cornerMap.pcd", *cornerMapCloudDS);
+        	ROS_INFO("Successfully saved cornerMap.pcd");
+    	} else {
+        	ROS_WARN("cornerMapCloudDS is empty, corner map will not be saved.");
+    	}
 
-    	ROS_INFO("Finished saving final map.");
-		}
+    	if (!surfaceMapCloudDS->empty()) {
+        	pcl::io::savePCDFileASCII(fileDirectory + "surfaceMap.pcd", *surfaceMapCloudDS);
+        	ROS_INFO("Successfully saved surfaceMap.pcd");
+    	} else {
+        	ROS_WARN("surfaceMapCloudDS is empty, surface map will not be saved.");
+    	}
+
+    	pcl::io::savePCDFileASCII(fileDirectory + "trajectory.pcd", *cloudKeyPoses3D);
+    	ROS_INFO("Successfully saved trajectory.pcd");
+
+}
 
 
     void publishGlobalMap(){
