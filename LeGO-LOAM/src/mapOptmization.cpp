@@ -732,8 +732,7 @@ public:
 
     // 최종 포인트 클라우드 저장
     	if (!globalMapKeyFramesDS->empty()) {
-        	pcl::io::savePCDFileASCII(fileDirectory + "finalCloud.pcd", *globalMapKeyFramesDS);
-        	ROS_INFO("Successfully saved finalCloud.pcd");
+		pcl::io::savePCDFileASCII("/tmp/finalCloud.pcd", *globalMapCloud);        	ROS_INFO("Successfully saved finalCloud.pcd");
     	} else {
         	ROS_WARN("globalMapKeyFramesDS is empty, final map will not be saved.");
    	}
