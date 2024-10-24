@@ -778,7 +778,7 @@ public:
     	pcl::io::savePCDFileASCII(fileDirectory + "trajectory.pcd", *cloudKeyPoses3D);
     	ROS_INFO("Successfully saved trajectory.pcd");
 
-}
+	}
 
 
     void publishGlobalMap(){
