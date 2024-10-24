@@ -722,6 +722,7 @@ public:
     }
 
     void visualizeGlobalMapThread(){
+	ROS_INFO("Before.........");
         ros::Rate rate(0.2);
         while (ros::ok()){
             rate.sleep();
